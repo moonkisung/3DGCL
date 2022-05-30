@@ -1,10 +1,6 @@
-from IPython.core.display import display, HTML
-display(HTML("<style>.container { width:90% !important; }</style>"))
-
 import pandas as pd
 import matplotlib.pyplot as plt
 from rdkit import RDLogger 
-RDLogger.DisableLog('rdApp.*')
 import torch
 from torch.utils.tensorboard import SummaryWriter
 
