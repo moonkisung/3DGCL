@@ -2,8 +2,6 @@ import sys
 sys.path.insert(0,'..')
 sys.path.insert(0,'../..')
 import torch
-#print(torch.version.cuda)
-#print(torch.__version__)
 
 from dig.sslgraph.utils import Encoder
 from dig.sslgraph.evaluation import GraphUnsupervised
@@ -12,13 +10,8 @@ from dig.threedgraph.dataset import MoleculeNet
 from dig.threedgraph.method import SphereNet, SchNet, DimeNetPP
 from dig.sslgraph.method import GraphCL
 
-import matplotlib.pyplot as plt
-
 from rdkit import RDLogger 
 RDLogger.DisableLog('rdApp.*')
-
-from IPython.core.display import display, HTML
-display(HTML("<style>.container { width:90% !important; }</style>"))
 
 import pandas as pd
 from rdkit import Chem
@@ -51,19 +44,6 @@ args.num_layers = 2 # [2, 4]
 args.num_filters = 128
 args.num_gaussians = 50
 args.z_dim = 512
-
-args.int_emb_size = 64
-args.basis_emb_size_dist = 8
-args.basis_emb_size_angle = 8
-args.basis_emb_size_torsion = 8
-args.out_emb_channels = 256
-args.num_spherical = 3
-args.num_radial = 6
-args.envelope_exponent = 5
-args.num_before_skip = 1
-args.num_after_skip = 2
-args.num_output_layers = 3
-args.use_node_features = True
 
 # Learning
 args.n_times = 3
