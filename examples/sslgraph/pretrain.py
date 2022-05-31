@@ -8,10 +8,10 @@ import sys
 sys.path.insert(0,'..')
 sys.path.insert(0,'../..')
 
-from dig.sslgraph.utils import Encoder
-from dig.sslgraph.evaluation import Pretrain
-from dig.threedgraph.dataset import MoleculeNet, QM
-from dig.sslgraph.method import GraphCL
+from threedgcl.sslgraph.utils import Encoder
+from threedgcl.sslgraph.evaluation import Pretrain
+from threedgcl.threedgraph.dataset import MoleculeNet, QM
+from threedgcl.sslgraph.method import GraphCL
 
 import argparse
 
