@@ -31,9 +31,6 @@ run examples/sslgraph/finetune.py
 run examples/sslgraph/downstream.py
 ```
 
-## Citation
-@inproceedings
-
 
 ## Acknowledgment
 Our implementation is mainly based on the following work.
