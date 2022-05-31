@@ -3,12 +3,12 @@ sys.path.insert(0,'..')
 sys.path.insert(0,'../..')
 import torch
 
-from dig.sslgraph.utils import Encoder
-from dig.sslgraph.evaluation import GraphUnsupervised
-from dig.sslgraph.evaluation import Finetune
-from dig.threedgraph.dataset import MoleculeNet
-from dig.threedgraph.method import SphereNet, SchNet, DimeNetPP
-from dig.sslgraph.method import GraphCL
+from threedgcl.sslgraph.utils import Encoder
+from threedgcl.sslgraph.evaluation import GraphUnsupervised
+from threedgcl.sslgraph.evaluation import Finetune
+from threedgcl.threedgraph.dataset import MoleculeNet
+from threedgcl.threedgraph.method import SchNet
+from threedgcl.sslgraph.method import GraphCL
 
 from rdkit import RDLogger 
 RDLogger.DisableLog('rdApp.*')
