@@ -33,3 +33,8 @@ run examples/sslgraph/downstream.py
 
 ## Citation
 @inproceedings
+
+
+## Acknowledgment
+Our implementation is mainly based on the following work. We are thankful for the great work.
+DIG: A Turnkey Library for Diving into Graph Deep Learning Research[https://github.com/divelab/DIG]
