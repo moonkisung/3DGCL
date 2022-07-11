@@ -15,7 +15,7 @@ Self-supervised learning (SSL) is a method that learns the data representation b
 - Pytorch Geometric 2.0.3
 - RDKit 2021.3.4
 
-## Run
+<!-- ## Run
 ### 1. Pre-train
 ```shell script
 run examples/sslgraph/pretrain.py
@@ -29,7 +29,7 @@ run examples/sslgraph/finetune.py
 ### 3. Supervised learning (No pre-train)
 ```shell script
 run examples/sslgraph/downstream.py
-```
+``` -->
 
 
 ## Acknowledgment
