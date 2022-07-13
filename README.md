@@ -29,7 +29,7 @@ run examples/sslgraph/finetune.py
 ### 3. Supervised learning (No pre-train)
 ```shell script
 run examples/sslgraph/downstream.py
-
+```
 
 
 ## Acknowledgment
