@@ -48,44 +48,6 @@ class NodeTranslation():
         elif self.method == 'MMFF4':
             max4pos_mmff = data.max4pos_mmff
             return Data(pos=max4pos_mmff, smiles=data.smiles, z=data.z)
-        elif self.method == 'UFF1':
-            max1pos_uff = data.max1pos_uff
-            return Data(pos=max1pos_uff, smiles=data.smiles, z=data.z)
-        elif self.method == 'UFF2':
-            max2pos_uff = data.max2pos_uff
-            return Data(pos=max2pos_uff, smiles=data.smiles, z=data.z)
-        elif self.method == 'rotation':
-            axis = torch.randint(0,3, (1,))  # 0~2 사이의 axis random하게 생성
-            rotation_axis = T.RandomRotate(degrees=180, axis=axis)
-            rotation = rotation_axis(data)
-            return Data(pos=rotation.pos, smiles=data.smiles, z=data.z)
-        elif self.method == 'noise':  # Gaussian noise (sampled from normal distribution with mean 0 and variance 0.01)
-            # https://stackoverflow.com/questions/59090533/how-do-i-add-some-gaussian-noise-to-a-tensor-in-pytorch
-            noise = torch.randn(data.pos.shape).to(self.device) * 0.01   #* (self.std**0.5)
-            noise = data.pos + noise
-            return Data(pos=noise, smiles=data.smiles, z=data.z)
-        #smiles = data.smiles
-        #pos = data.pos.detach().clone()
-        #print('first pos: ', pos)
-        #mol = Chem.MolFromSmiles(smiles)
-        #mol = Chem.AddHs(mol)
-        #n_atoms = len(mol.GetAtoms()) # 분자의 원자 개수
-        # Get Atomic Position
-        #for i in range(self.repeat):
-        #    status = AllChem.EmbedMolecule(mol, AllChem.ETKDG())
-        #    if status !=0:
-        #        print(f"Error while generating 3D: {Chem.MolToSmiles(mol)}")
-        #        continue
-            
-        #pos_list = []
-        #for atm_id in range(n_atoms):
-        #    atm_pos = mol.GetConformer(0).GetAtomPosition(atm_id)
-        #    crd = [atm_pos.x, atm_pos.y, atm_pos.z]
-        #    pos_list.append(crd)
-        #pos = torch.tensor(pos_list, dtype=torch.float)
-        #print('last pos: ', pos)
-        #return Data(pos=pos, smiles=data.smiles, z=data.z)
-        #return Data(pos=pos, smiles=data.smiles, z=data.z)
 
     def views_fn(self, data):
         #data = data.to(torch.device('cuda:0' if torch.cuda.is_available() else 'cpu'))
