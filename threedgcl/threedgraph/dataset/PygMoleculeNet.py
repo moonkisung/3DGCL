@@ -204,21 +204,10 @@ class MoleculeNet(InMemoryDataset):
                 AllChem.EmbedMultipleConfs(mol, numConfs=5, randomSeed=2222, numThreads=0)
             except: continue
             li = AllChem.MMFFOptimizeMoleculeConfs(mol, maxIters=2000)  # MMFF의 경우
-            #print('li', li)
             li = [t[1] for t in li]
-            #print(li)
             sortidx = torch.argsort(torch.tensor(li))
-            #print('after ETKDG')      
-            #rmslist = []
-            #AllChem.AlignMolConformers(mol, RMSlist=rmslist)
-            #if not rmslist:
-            #    continue
-            #rangeidx = len(rmslist)+1
-            #sortidx = [i for i in range(rangeidx)]
-            #print('sortidx', sortidx)
             minidx = int(sortidx[0])
             maxidx1, maxidx2, maxidx3, maxidx4 = int(sortidx[-1]), int(sortidx[-2]), int(sortidx[-3]), int(sortidx[-4])
-            #print(minidx, maxidx1, maxidx2, maxidx3, maxidx4)
             minpos = mol.GetConformer(minidx).GetPositions()
             max1pos = mol.GetConformer(maxidx1).GetPositions()
             max2pos = mol.GetConformer(maxidx2).GetPositions()
@@ -237,60 +226,6 @@ class MoleculeNet(InMemoryDataset):
             data = Data(pos=minpos_mmff, max1pos_mmff=max1pos_mmff, max2pos_mmff=max2pos_mmff, max3pos_mmff=max3pos_mmff, max4pos_mmff=max4pos_mmff,
                         z=z, y=y,smiles=smiles)
 
-            ## UFF ##
-            #AllChem.EmbedMultipleConfs(mol, numConfs=1000, pruneRmsThresh=0.1, randomSeed=2222, numThreads=0)
-            #AllChem.EmbedMultipleConfs(mol, numConfs=3, randomSeed=2222, numThreads=0)
-            #try:
-            #    arr = AllChem.UFFOptimizeMoleculeConfs(mol, maxIters=2000)
-            #except: continue
-            #e = [v  for s, v in arr]
-            #sortidx = np.argsort(e)
-            #minidx = int(sortidx[0])
-            #maxidx1, maxidx2 = int(sortidx[-1]), int(sortidx[-2])
-            
-            #minpos = mol.GetConformer(minidx).GetPositions()
-            #max1pos = mol.GetConformer(maxidx1).GetPositions()
-            #max2pos = mol.GetConformer(maxidx2).GetPositions()
-            
-            #minpos_uff = torch.tensor(minpos, dtype=torch.float)
-            #max1pos_uff = torch.tensor(max1pos, dtype=torch.float)
-            #max2pos_uff = torch.tensor(max2pos, dtype=torch.float)
-            
-            ## MMFF ##
-            #AllChem.EmbedMultipleConfs(mol, numConfs=1000, pruneRmsThresh=0.1, randomSeed=2222, numThreads=0)
-            #AllChem.EmbedMultipleConfs(mol, numConfs=3, randomSeed=2222, numThreads=0)
-            #try:
-            #    arr = AllChem.MMFFOptimizeMoleculeConfs(mol, maxIters=2000)
-            #except: continue
-            #e = [v  for s, v in arr]
-            #sortidx = np.argsort(e)
-            #minidx = int(sortidx[0])
-            #maxidx1, maxidx2 = int(sortidx[-1]), int(sortidx[-2])
-            
-            #minpos = mol.GetConformer(minidx).GetPositions()
-            #max1pos = mol.GetConformer(maxidx1).GetPositions()
-            #max2pos = mol.GetConformer(maxidx2).GetPositions()
-            
-            #minpos_mmff = torch.tensor(minpos, dtype=torch.float)
-            #max1pos_mmff = torch.tensor(max1pos, dtype=torch.float)
-            #max2pos_mmff = torch.tensor(max2pos, dtype=torch.float)
-            
-            #print(data)
-            #status = AllChem.EmbedMolecule(mol, AllChem.ETKDG())
-            #if status !=0:
-            #    print(f"Error while generating 3D: {Chem.MolToSmiles(mol)}")
-            #    continue
-            #    #return None
-            
-            #pos_list = []
-            #for atm_id in range(n_atoms):
-            #    atm_pos = mol.GetConformer(0).GetAtomPosition(atm_id)
-            #    crd = [atm_pos.x, atm_pos.y, atm_pos.z]
-            #    pos_list.append(crd)
-            #pos = torch.tensor(pos_list, dtype=torch.float)       
-            
-            #data = Data(pos=pos, z=z, y=y,smiles=smiles)
-
             if self.pre_filter is not None and not self.pre_filter(data):
                 continue
 
@@ -301,9 +236,7 @@ class MoleculeNet(InMemoryDataset):
 
         torch.save(self.collate(data_list), self.processed_paths[0])
 
-        
-
-        
+       
         
     def get_idx_split(self, task, data_size, train_size, valid_size, seed):
             if task =='esol':
