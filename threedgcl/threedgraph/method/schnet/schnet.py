@@ -28,22 +28,12 @@ class update_e(torch.nn.Module):
         self.mlp[0].bias.data.fill_(0)
 
     def forward(self, v, dist, dist_emb, edge_index):
-        #print('-------------update e-------------')
         j, _ = edge_index
-        #print('j(index of n_j: ', j.shape)
-        #print('j[:5]: ',j[:5])
         C = 0.5 * (torch.cos(dist * PI / self.cutoff) + 1.0)       
-        #print('C(embedding of dist/cutoff): ', C.shape)
         W = self.mlp(dist_emb) * C.view(-1, 1)
-        #print('W(MLP with dist_emb and C): ', W.shape)
         W = self.dropout(W)
         v = self.lin(v)
-        #print('v(hidden_channels -> num_filters): ', v.shape)
         e = v[j] * W
-        #print('e(v[j] * W : node_j에 해당하는 node만 indexing한 후 W multiply -> j atom에 dist와 dist_emb 반영): ', e.shape)
-        #print('dist: ', dist)
-        #print('dist_emb: ', dist_emb)
-        #print('W: ', W)
         return e
 
 
@@ -66,35 +56,11 @@ class update_v(torch.nn.Module):
     def forward(self, v, e, edge_index):
         #print('-------------update v-------------')
         _, i = edge_index
-        #print('i(index of n_i): ', i.shape)
-        #print('i[:5]: ',i[:5])
-        #print('update e: ', e.shape)  # atom_j 들의 순서가 edge_index에 따라 배열
-        #print('e', e[:2])
-        #print('e[i]', e[i][:2])
-        #print('e[i](node i에 해당하는 update e만 indexing): ', e[i].shape)  # edge_index에 따라 atom_j들이 배열되어 있기 때문에 atom_i의 index로 _j를 가져올 수 있음
-        #print('e shape: ', e.shape)
-        #print('i(index of n_i): ', i.shape)
-        #print('v.shape', v.shape)
-        out = scatter(e, i, dim=0)  # 연결되어있는 j들을 sum해서 atom_i 생성
-        #out = global_add_pool(e, i)
-        #print('out.shape', out.shape)
-        #print('out(update e 중에 node i에 해당하는 e들만 sum): ', out.shape)  # 
+        out = scatter(e, i, dim=0)  
         out = self.lin1(out)
         out = self.act(out)
         out = self.dropout(out)
         out = self.lin2(out)
-        #print('out(num_filters -> hidden channel MLP에 태움): ', out.shape)
-        #print(self.lin2.weight)
-        
-        #if v.shape != out.shape:
-            #print('lin2 weight.shape', self.lin2.weight.shape)
-            #print('v', v)
-            #print('out', out)
-            #print('v[-2]', v[-2])
-            #print('v[-1]', v[-1])
-            #print('out', out[-1])
-            #print('v.shape', v.shape)
-            #print('out.shape', out.shape)
         return v + out
 
 
@@ -120,14 +86,13 @@ class update_u(torch.nn.Module):
         v = self.dropout(v)
         v = self.lin2(v)
         u = scatter(v, batch, dim=0)
-        #u = global_add_pool(v, batch)
         return u
 
 
 class emb(torch.nn.Module):
     def __init__(self, start=0.0, stop=5.0, num_gaussians=50):
         super(emb, self).__init__()
-        offset = torch.linspace(start, stop, num_gaussians)  # start 부터 stop까지 일정 간격의 50개의 number 생성
+        offset = torch.linspace(start, stop, num_gaussians)  
         self.coeff = -0.5 / (offset[1] - offset[0]).item()**2
         self.register_buffer('offset', offset)
 
@@ -192,19 +157,12 @@ class SchNet(torch.nn.Module):
     def forward(self, batch_data):
         z, pos, batch = batch_data.z, batch_data.pos, batch_data.batch
         edge_index = radius_graph(pos, r=self.cutoff, batch=batch, max_num_neighbors=100)  # Based on pos, return edge_index within cutoff 
-        #print('edge_index: ', edge_index.shape)
         row, col = edge_index
         dist = (pos[row] - pos[col]).norm(dim=-1) # return distance between edge
         dist_emb = self.dist_emb(dist)
-        #print('dist_emb(dist embedding): ', dist_emb.shape)
         v = self.init_v(z)
-        #print('v(atom embedding): ', v.shape)
         for update_e, update_v in zip(self.update_es, self.update_vs):
             e = update_e(v, dist, dist_emb, edge_index)
-            #print('e: ', e.shape)
             v = update_v(v, e, edge_index)
-            #print('v: ', v.shape)
         u = self.update_u(v, batch)
-        #print('u: ', u.shape)
-        #raise NotImplementedError
         return u
