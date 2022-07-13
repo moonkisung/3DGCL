@@ -39,14 +39,6 @@ class GraphCL(Contrastive):
         for aug in [self.aug_1, self.aug_2]:
             if aug is None:
                 views_fn.append(lambda x: x)
-            elif aug == 'ETKDG1':
-                views_fn.append(NodeTranslation(method='ETKDG1', device=self.device))
-            elif aug == 'ETKDG2':
-                views_fn.append(NodeTranslation(method='ETKDG2', device=self.device))
-            elif aug == 'UFF1':
-                views_fn.append(NodeTranslation(method='UFF1', device=self.device))
-            elif aug == 'UFF2':
-                views_fn.append(NodeTranslation(method='UFF2', device=self.device))
             elif aug == 'MMFF1':
                 views_fn.append(NodeTranslation(method='MMFF1', device=self.device))
             elif aug == 'MMFF2':
@@ -55,14 +47,6 @@ class GraphCL(Contrastive):
                 views_fn.append(NodeTranslation(method='MMFF3', device=self.device))
             elif aug == 'MMFF4':
                 views_fn.append(NodeTranslation(method='MMFF4', device=self.device))
-            elif aug == 'rotation':
-                views_fn.append(NodeTranslation(method='rotation', device=self.device))
-            elif aug == 'noise':
-                views_fn.append(NodeTranslation(method='noise', device=self.device))
-            elif aug == 'dropN':
-                views_fn.append(UniformSample(ratio=self.aug_ratio, device=self.device))
-            elif aug == 'maskN':
-                views_fn.append(NodeAttrMask(mask_ratio=self.aug_ratio))
             elif aug == 'random':
                 method = random.choice(['MMFF1', 'MMFF4'])
                 
