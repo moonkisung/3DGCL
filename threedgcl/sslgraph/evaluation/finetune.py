@@ -344,11 +344,11 @@ class Finetune(object):
                     f_optimizer = Adam(fold_model.parameters(), lr=0)
                     scheduler = CosineAnnealingWarmUpRestarts(f_optimizer, T_0=10, T_mult=1, eta_max=0.01,  T_up=10, gamma=0.5)
                 wait = 0
-                best_val_auc = 0  # epoch 단위
-                best_test_auc = 0 # epoch 단위
+                best_val_auc = 0  
+                best_test_auc = 0 
                 best_val_loss = float("inf") 
                 best_test_loss = float("inf") 
-                patience = 50     # epoch 단위
+                patience = 50     
                 with trange(self.f_epoch) as t:
                     for epoch in t:
                         t.set_description('Finetune: epoch %d' % (epoch+1))
@@ -439,8 +439,6 @@ class Finetune(object):
                                           val_rmse='{:.3f}'.format(float(val_rmse)), 
                                           test_rmse='{:.3f}'.format(float(test_rmse)),
                                           FOLD='{:.1f}'.format(fold))
-                        #print(fold_train_losses)
-                        #train_sizes = [i + 1 for i in range(len(fold_train_losses))]
                         plt.style.use('seaborn')
                         plt.plot(fold_train_losses, label = 'Training error')
                         plt.plot(fold_val_losses, label = 'Validation error')
@@ -453,13 +451,7 @@ class Finetune(object):
                         best_val_losses.append(best_val_loss)
                         best_test_losses.append(best_test_loss)
                         
-                        #print(fold_train_losses)
 
-                        #plt.ylim(0,40)
-                        
-                        #if self.args.dataset == 'lipo': 
-                         #   if best_test_loss > 0.88:
-                          #      break
             directory = './results/' + self.args.dataset + '/' + self.encoder
             txtfile = directory + '/' + 'losses.txt'
             with open(txtfile, "a") as myfile:
@@ -537,10 +529,7 @@ class Finetune(object):
     def grid_search(self, args):
         finetune = args.finetune
         model = args.model_path.split('/')[-1]
-        #print('model', model)
-        #print(args.model_path.split('/'))
         parameter = args.model_path.split('/')[2]
-        #print(paramter)
         n_times = args.n_times
         n_folds = args.n_folds
         batch_lst = args.batch_lst
@@ -596,8 +585,6 @@ class Finetune(object):
                                     
             idx = np.argmax(auc_m_lst)
             total = [(param, auc) for param, auc in zip(paras, auc_m_lst)]
-            #print('Best paras: batch_size=%d, cutoff=%f, num_layers=%d, z_dim=%d, auc=%.4f' %(
-             #   paras[idx][0], paras[idx][1], paras[idx][2], paras[idx][3], paras[idx][4], auc_m_lst[idx]))
             print('Total Results: ', total)
             return auc_m_lst[idx], auc_sd_lst[idx], paras[idx], total
         
@@ -623,21 +610,6 @@ class Finetune(object):
                                                     loss_m_lst.append(loss_m)
                                                     loss_sd_lst.append(loss_sd)
                                                     paras.append((batch_size, cutoff, num_layers, z_dim, dropout_rate))
-                                                    if self.f_optim == 'StepLR':
-                                                        with open(txtfile, "a") as myfile:
-                                                            if finetune:
-                                                                myfile.write('model:'+ str(model) + '_' + str(parameter) + '_')
-                                                            myfile.write('finetune:'+ str(finetune) + '_n_times:' + str(n_times) + '_folds:' + str(n_folds) + '_target:' + str(target) + '_loss:'+ str(np.round(loss_m, 5)) + '_sd:'+ str(np.round(loss_sd, 5)) + '_batch:' + str(batch_size) + '_cutoff:' + str(cutoff) + '_layer:' + str(num_layers) + '_filter:' + str(self.num_filters) + '_gau:' + str(self.num_gaussians) + '_z_dim:' + str(z_dim) + '_dropout:' + str(dropout_rate) + '_lr:' + str(f_lr) + '_weight_decay:' + str(self.f_weight_decay) + '_lr_decay_step_size:' +  str(self.f_lr_decay_step_size) + '_lr_decay_factor:' + str(self.f_lr_decay_factor) + "\n")
-                                                    elif self.f_optim == 'ExponentialLR':
-                                                        with open(txtfile, "a") as myfile:
-                                                            if finetune:
-                                                                myfile.write('model:'+ str(model) + '_' + str(parameter) + '_')
-                                                            myfile.write('finetune:'+ str(finetune) + '_n_times:' + str(n_times) +  '_folds:' + str(n_folds) + '_target:' + str(target) + '_loss:'+ str(np.round(loss_m, 5)) + '_sd:'+ str(np.round(loss_sd, 5)) + '_batch:' + str(batch_size) + '_cutoff:' + str(cutoff) + '_layer:' + str(num_layers) + '_filter:' + str(self.num_filters) + '_gau:' + str(self.num_gaussians) + '_z_dim:' + str(z_dim) + '_dropout:' + str(dropout_rate) + '_lr:' + str(f_lr) + '_weight_decay:' + str(self.f_weight_decay) + '_expo_gamma:' +  str(self.expo_gamma) + "\n")    
-                                                    elif self.f_optim == 'Cosine':
-                                                        with open(txtfile, "a") as myfile:
-                                                            if finetune:
-                                                                myfile.write('model:'+ str(model) + '_' + str(parameter) + '_')
-                                                            myfile.write('finetune:'+ str(finetune) + '_n_times:' + str(n_times) + '_folds:' + str(n_folds) + '_target:' + str(target) + '_loss:'+ str(np.round(loss_m, 5)) + '_sd:'+ str(np.round(loss_sd, 5)) + '_batch:' + str(batch_size) + '_cutoff:' + str(cutoff) + '_layer:' + str(num_layers) + '_filter:' + str(self.num_filters) + '_gau:' + str(self.num_gaussians) + '_z_dim:' + str(z_dim) + '_dropout:' + str(dropout_rate) + '_T_0:' + str(self.T_0) + '_T_mult:' + str(self.T_mult) + '_eta_max:' +  str(self.eta_max) + '_T_up:' + str(self.T_up) +'_gamma:' + str(self.gamma) + "\n")
                                         
             idx = np.argmin(loss_m_lst)
             total = [(param, loss) for param, loss in zip(paras, loss_m_lst)]
@@ -660,28 +632,12 @@ class Finetune(object):
                                 loss_sd_lst.append(loss_sd)
                                 paras.append((batch_size, cutoff, num_layers, z_dim, dropout_rate))
                                 if self.f_optim == 'StepLR':
-                                    with open(txtfile, "a") as myfile:
-                                        if finetune:
-                                            myfile.write('model:'+ str(model) + '_')
-                                        myfile.write('finetune:'+ str(finetune) + '_folds:' + str(n_folds) + '_target:' + str(target) + '_loss:'+ str(np.round(loss_m, 5)) + '_sd:'+ str(np.round(loss_sd, 5)) + '_batch:' + str(batch_size) + '_cutoff:' + str(cutoff) + '_layer:' + str(num_layers) + '_filter:' + str(self.num_filters) + '_gau:' + str(self.num_gaussians) + '_z_dim:' + str(z_dim) + '_dropout:' + str(dropout_rate) + '_lr:' + str(self.f_lr) + '_weight_decay:' + str(self.f_weight_decay) + '_lr_decay_step_size:' +  str(self.f_lr_decay_step_size) + '_lr_decay_factor:' + str(self.f_lr_decay_factor) + "\n")
-                                elif self.f_optim == 'ExponentialLR':
-                                    with open(txtfile, "a") as myfile:
-                                        if finetune:
-                                            myfile.write('model:'+ str(model) + '_')
-                                        myfile.write('finetune:'+ str(finetune) + '_folds:' + str(n_folds) + '_target:' + str(target) + '_loss:'+ str(np.round(loss_m, 5)) + '_sd:'+ str(np.round(loss_sd, 5)) + '_batch:' + str(batch_size) + '_dropout:' + str(dropout_rate) + '_lr:' + str(self.f_lr) + '_weight_decay:' + str(self.f_weight_decay) + '_expo_gamma:' +  str(self.expo_gamma) + "\n")    
-                                elif self.f_optim == 'Cosine':
-                                    with open(txtfile, "a") as myfile:
-                                        if finetune:
-                                            myfile.write('model:'+ str(model) + '_')
-                                        myfile.write('finetune:'+ str(finetune) + '_folds:' + str(n_folds) + '_target:' + str(target) + '_loss:'+ str(np.round(loss_m, 5)) + '_sd:'+ str(np.round(loss_sd, 5)) + '_batch:' + str(batch_size) + '_cutoff:' + str(cutoff) + '_layer:' + str(num_layers) + '_filter:' + str(self.num_filters) + '_gau:' + str(self.num_gaussians) + '_z_dim:' + str(z_dim) + '_dropout:' + str(dropout_rate) + '_T_0:' + str(self.T_0) + '_T_mult:' + str(self.T_mult) + '_eta_max:' +  str(self.eta_max) + '_T_up:' + str(self.T_up) +'_gamma:' + str(self.gamma) + "\n")
+
                                         
             idx = np.argmin(loss_m_lst)
             total = [(param, loss) for param, loss in zip(paras, loss_m_lst)]
-            #print('Best paras: batch_size=%d, cutoff=%f, num_layers=%d, z_dim=%d, loss=%.4f' %(
-             #   paras[idx][0], paras[idx][1], paras[idx][2], paras[idx][3], paras[idx][4], loss_m_lst[idx]))
             print('Total Results: ', total)
-#            with open(txtfile, "a") as myfile:
- #               myfile.write('loss:'+ str(np.round(loss_m, 3)) + '_batch:'  "\n")
+
             return loss_m_lst[idx], loss_sd_lst[idx], paras[idx], total
 
     
@@ -770,22 +726,19 @@ def k_scaffold(n_folds, dataset, batch_size, task_type):
         train_ys = [ data.y for idx, data in enumerate(train_loader) ]
         val_ys = [ data.y for idx, data in enumerate(val_loader) ]
         test_ys = [ data.y for idx, data in enumerate(test_loader) ]
-        #print('val_ys', val_ys)
-        #print('test_ys', test_ys)
         if task_type == 'cls':
             checklist = checkbinary(train_ys) + checkbinary(val_ys) + checkbinary(test_ys)
             #print(checklist)
             if 2 in checklist :
                 continue
             else:
-            #if 2 not in checklist or len(val)!=0 or len(test)!=0:  # val, test 길이가 0이 아니고 y에 0과 1이 같이 없으면  # and 2 not in checklist 
+            #if 2 not in checklist or len(val)!=0 or len(test)!=0:  
                 i+=1
             yield i, train_loader, val_loader, test_loader
         elif task_type == 'reg':
             print(len(train), len(val), len(test))
             if len(val)!=0 or len(test)!=0:
                 i+=1
-                #print('len(train), len(val), len(test)', len(train), len(val), len(test))
             yield i, train_loader, val_loader, test_loader
             
             
@@ -795,8 +748,6 @@ def k_fold(n_folds, dataset, batch_size, task_type):  # , seed=12345
 
     test_indices, train_indices = [], []
     for _, idx in kf.split(torch.zeros(len(dataset))):
-        #print(len(idx))
-        #print(len(dataset))
         test_indices.append(torch.from_numpy(idx))
         
     val_indices = [test_indices[i - 1] for i in range(n_folds)]
@@ -807,25 +758,14 @@ def k_fold(n_folds, dataset, batch_size, task_type):  # , seed=12345
         train_mask[val_indices[i].long()] = 0
         idx_train = train_mask.nonzero(as_tuple=False).view(-1)
         train_indices.append(idx_train)
-    #print(train_indices[0])
-    #print(val_indices[0])
-    #print(test_indices[0])
+        
     for i in range(n_folds):
         if batch_size is None:
             batch_size = len()
         train_loader = DataLoader(dataset[train_indices[i].long()], batch_size, shuffle=True)
         val_loader = DataLoader(dataset[val_indices[i].long()], batch_size, shuffle=False)
         test_loader = DataLoader(dataset[test_indices[i].long()], batch_size, shuffle=False)
-        #print(len(train_loader))
-        #print(len(val_loader))
-        #print(len(test_loader))
         print(len(train_indices[0]))
         print(len(val_indices[0]))
         print(len(test_indices[0]))
-        #print(len(train_indices[-1]))
-        #print(len(val_indices[-1]))
-        #print(len(test_indices[-1]))
-        #print(train_indices)
-        #print(val_indices)
-        #print(test_indices)
         yield i, train_loader, val_loader, test_loader
