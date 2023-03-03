@@ -3,7 +3,7 @@ import torch
 from tqdm import trange
 import torch.nn as nn
 
-from torch_geometric.nn.acts import swish
+#from torch_geometric.nn.acts import swish
 from torch_geometric.data import Batch, Data
 
 from dig.sslgraph.method.contrastive.objectives import NCE_loss, JSE_loss
