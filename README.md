@@ -24,17 +24,17 @@ Self-supervised learning (SSL) is a method that learns the data representation b
 ## Run
 ### 1. Pre-train
 ```shell script
-run examples/sslgraph/pretrain.py
+run examples/sslgraph/pretrain.ipynb
 ```
 
 ### 2. Fine-tune
 ```shell script
-run examples/sslgraph/finetune.py
+run examples/sslgraph/finetune.ipynb
 ```
 
 ### 3. Supervised learning (No pre-train)
 ```shell script
-run examples/sslgraph/downstream.py
+run examples/sslgraph/downstream.ipynb
 ```
 
 
