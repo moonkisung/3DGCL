@@ -171,13 +171,13 @@ class Contrastive(nn.Module):
                 #if self.per_epoch_out:
                  #   yield encoder, self.proj_head_g
             
-        plt.style.use('seaborn')
-        plt.plot(losses, label = 'Pretrain error')
-        plt.ylabel('Loss', fontsize = 14)
-        plt.xlabel('Epoch', fontsize = 14)
-        plt.title('Learning curves for a pre-training model', fontsize = 18) # , y = 1.03
-        plt.legend()
-        plt.show()
+        #plt.style.use('seaborn')
+        #plt.plot(losses, label = 'Pretrain error')
+        #plt.ylabel('Loss', fontsize = 14)
+        #plt.xlabel('Epoch', fontsize = 14)
+        #plt.title('Learning curves for a pre-training model', fontsize = 18) # , y = 1.03
+        #plt.legend()
+        #plt.show()
         if not self.per_epoch_out:
             print('last')
             yield encoder, self.proj_head_g
