@@ -15,7 +15,7 @@ from torch_geometric.nn.inits import glorot, zeros
 from torch_scatter import scatter
 from torch_geometric.nn import radius_graph
 from typing import Optional, Tuple
-from .spherenet import SphereNet
+#from .spherenet import SphereNet
 
 class Encoder(torch.nn.Module):
     
