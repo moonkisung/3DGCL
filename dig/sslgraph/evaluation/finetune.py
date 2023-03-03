@@ -20,10 +20,10 @@ from dig.sslgraph.utils.cosine_annealing_with_warmup import CosineAnnealingWarmU
 #from dig.sslgraph.utils.parallel import DataParallelModel, DataParallelCriterion
 from dig.sslgraph.utils import Encoder
 from dig.sslgraph.utils.encoders import ShiftedSoftplus
-from dig.threedgraph.method import SphereNet, SchNet, DimeNetPP, GIN
+from dig.threedgraph.method import SchNet
 
 from torch_geometric.loader import DataLoader
-from torch_geometric.nn.acts import swish
+#from torch_geometric.nn.acts import swish
 
 from sklearn.svm import SVC
 from sklearn import preprocessing
