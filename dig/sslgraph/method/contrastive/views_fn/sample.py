@@ -36,17 +36,9 @@ class UniformSample():
             node_num = data.z.shape[0]
             keep_num = int(node_num * (1-self.ratio))
             idx_nondrop = torch.randperm(node_num)[:keep_num]
-            #print('idx_nondrop', idx_nondrop)
-            #print('pos', data.pos)
-            #print('z', data.z)
-            #print('torch.zeros_like(data.z[:, 0])', torch.zeros_like(data.z[:]))
-            #print('torch.zeros_like(data.z)', torch.zeros_like(data.z))
             mask_nondrop = torch.zeros_like(data.z.cpu()).scatter_(0, idx_nondrop, 1.0).bool()
-            #print('mask_nondrop', mask_nondrop)
             pos = data.pos[mask_nondrop]
             z = data.z[mask_nondrop]
-            #raise NotImplementedError
-            #return Data(pos=data.pos, smiles=data.smiles, z=data.z)
             return Data(pos=pos, smiles=data.smiles, z=z)
 
     #def do_trans(self, data):
