@@ -103,11 +103,6 @@ def infoNCE_local_global(z_n, z_g, batch, tau=0.5, norm=True):
 
     return loss
 
-#진동값에 음성추출 방법을 적용 (MFCC, Mel..) + CNN 활용
-#2DCNN > + transformer 1DCNN  
-
-#spectrogram이 mel보다 성능 안나옴
-#진동값이 저주파에 대부분 분포 (mel, MFCC)
 
 def NT_Xent(z1, z2, tau=0.5, norm=True, pc=False):
     '''
