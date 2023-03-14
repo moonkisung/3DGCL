@@ -120,21 +120,17 @@ def NT_Xent(z1, z2, tau=0.5, norm=True, pc=False):
 
         sim_matrix = sim_matrix / torch.einsum('i,j->ij', z1_abs, z2_abs)
 
-    sim_matrix = torch.exp(sim_matrix / tau)  # z1 dot z2  # [batch, batch]
-    pos_sim = sim_matrix[range(batch_size), range(batch_size)]  # 대각 행렬만 선택 [batch]
+    sim_matrix = torch.exp(sim_matrix / tau)  
+    pos_sim = sim_matrix[range(batch_size), range(batch_size)]  
     loss = pos_sim / (sim_matrix.sum(dim=1) - pos_sim) # [batch]
     loss = - torch.log(loss).mean()
     if pc:
-        #print(1)
         lambda_pc = 1
         distance = torch.sum(((z1 - z2)) ** 2, 1).sqrt() # embedding distance (l2_norm)
         distance = torch.sigmoid(distance)
-        print('distance', distance)
         difference = lambda_pc * (abs((E1 - E2)/ (E0))) # Energy difference
         difference = torch.sigmoid(difference)
-        print('difference', difference)
         loss_pc = (distance - difference)**2
         loss_pc = loss_pc.mean()
-        print('loss+pc', loss+loss_pc)
         return loss + loss_pc
     return loss
